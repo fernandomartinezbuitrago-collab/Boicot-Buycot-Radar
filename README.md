@@ -40,7 +40,7 @@ Si deseas ejecutar este proyecto localmente, sigue estos pasos:
 
      streamlit run app.py
      
-📊 Visualización de la Herramienta
+## 📊 Visualización de la Herramienta
 <img width="1275" height="1115" alt="image" src="https://github.com/user-attachments/assets/a02e25fd-38b7-452a-8fb9-b5da6238f1be" />
 
 
