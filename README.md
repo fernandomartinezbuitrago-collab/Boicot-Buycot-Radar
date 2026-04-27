@@ -28,17 +28,16 @@ Si deseas ejecutar este proyecto localmente, sigue estos pasos:
 
 1. **Clonar el repositorio:**
    ```bash
-   https://github.com/fernandomartinezbuitrago-collab/Boicot-Buycot-Radar/tree/main
+   git clone https://github.com/fernandomartinezbuitrago-collab/Boicot-Buycot-Radar.git
+   cd Boicot-Buycot-Radar
    
    
 2. **Instalar dependencias:**
 
-    Bash
     pip install -r requirements.txt
 
 3. **Ejecutar la aplicación:**
 
-     Bash
      streamlit run app.py
      
 📊 Visualización de la Herramienta
