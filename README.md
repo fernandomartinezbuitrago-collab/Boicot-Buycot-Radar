@@ -28,7 +28,7 @@ Si deseas ejecutar este proyecto localmente, sigue estos pasos:
 
 1. **Clonar el repositorio:**
    ```bash
-   git clone [https://github.com/TU_USUARIO/boicot-buycot-radar.git](https://github.com/TU_USUARIO/boicot-buycot-radar.git)
+   git clone (https://github.com/fernandomartinezbuitrago-collab/Boicot-Buycot-Radar/tree/main)
    cd boicot-buycot-radar
    
 2. **Instalar dependencias:**
