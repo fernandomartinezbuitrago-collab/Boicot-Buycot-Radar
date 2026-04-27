@@ -31,12 +31,12 @@ Si deseas ejecutar este proyecto localmente, sigue estos pasos:
    git clone [https://github.com/TU_USUARIO/boicot-buycot-radar.git](https://github.com/TU_USUARIO/boicot-buycot-radar.git)
    cd boicot-buycot-radar
    
- 2. Instalar dependencias:
+2. **Instalar dependencias:**
 
     Bash
     pip install -r requirements.txt
 
-  3. Ejecutar la aplicación:
+3. **Ejecutar la aplicación:**
 
      Bash
      streamlit run app.py
