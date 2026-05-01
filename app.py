@@ -1,7 +1,4 @@
-
-# ==========================================
-# 1. IMPORTACIÓN DE LIBRERÍAS
-# ==========================================
+%%writefile app.py
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -10,25 +7,33 @@ import shap
 import matplotlib.pyplot as plt
 
 # ==========================================
-# 2. CONFIGURACIÓN Y CACHÉ
+# 1. CONFIGURACIÓN Y CARGA DE MODELO
 # ==========================================
 st.set_page_config(page_title="Brand Risk & Propensity Radar", page_icon="🛡️", layout="wide")
 
 @st.cache_resource
 def cargar_recursos():
-    pipeline_rf = joblib.load('models/modelo_boicot_rf.joblib')
+    # Cargamos el pipeline entrenado
+    path_modelo = '/content/drive/MyDrive/TFM Herramienta/models/modelo_boicot_rf.joblib'
+    pipeline_rf = joblib.load(path_modelo)
+    
+    # Extraemos el modelo y preparamos el explicador SHAP
     modelo_puro = pipeline_rf[-1]
     explainer = shap.TreeExplainer(modelo_puro)
     return pipeline_rf, explainer
 
-modelo_rf, explainer = cargar_recursos()
-columnas_modelo = modelo_rf[-1].feature_names_in_
+try:
+    modelo_rf, explainer = cargar_recursos()
+    columnas_modelo = modelo_rf[-1].feature_names_in_
+except Exception as e:
+    st.error(f"Error al cargar el modelo: {e}")
+    st.stop()
 
 # ==========================================
-# 3. INTERFAZ DE USUARIO
+# 2. INTERFAZ DE USUARIO (SIDEBAR)
 # ==========================================
 st.title("🛡️ Brand Risk & Propensity Radar")
-st.markdown("Motor Predictivo de Riesgo de Boicot con Inteligencia Artificial Explicable (XAI)")
+st.markdown("### Motor Predictivo de Riesgo de Boicot con IA Explicable (XAI)")
 
 st.sidebar.header("⚙️ Simulador de Escenarios")
 
@@ -44,7 +49,7 @@ st.sidebar.subheader("3. Agenda Medioambiental")
 cambio_climatico = st.sidebar.selectbox("Impacto del Cambio Climático (V241365)", ["Extremadamente grave (1)", "Moderado (3)", "No es un problema (5)"])
 
 # ==========================================
-# 4. PROCESAMIENTO E INFERENCIA
+# 3. LÓGICA DE PROCESAMIENTO
 # ==========================================
 df_codificado = pd.DataFrame(0, index=[0], columns=columnas_modelo)
 
@@ -70,7 +75,7 @@ for var, val in variables_clave.items():
 probabilidad_boicot = modelo_rf.predict_proba(df_codificado)[0][1] * 100
 
 # ==========================================
-# 5. VISUALIZACIÓN Y MÉTRICAS
+# 4. VISUALIZACIÓN DE RESULTADOS
 # ==========================================
 st.markdown("---")
 st.subheader("📊 Análisis de Riesgo Predictivo")
@@ -87,13 +92,14 @@ with col_m2:
         st.success("ESTADO: ESTABLE ✅")
 
 # ==========================================
-# 6. MOTOR DE EXPLICABILIDAD (SHAP TRADUCIDO)
+# 5. EXPLICABILIDAD SHAP
 # ==========================================
 st.markdown("---")
 st.subheader("🧠 ¿Por qué este resultado? (Explicabilidad SHAP)")
 
 shap_values_raw = explainer.shap_values(df_codificado)
 
+# Manejo de dimensiones de SHAP (evita fallos de visualización)
 if isinstance(shap_values_raw, list):
     valores_grafico = shap_values_raw[1][0]
 elif len(np.array(shap_values_raw).shape) == 3:
@@ -101,23 +107,13 @@ elif len(np.array(shap_values_raw).shape) == 3:
 else:
     valores_grafico = np.array(shap_values_raw)[0]
 
-# --- DICCIONARIO TRADUCTOR ACTUALIZADO ---
 diccionario_nombres = {
-    # Variables de la UI
-    'V241005': 'Interés en campañas',
-    'V241210': 'Importancia de quién gane',
-    'V241171': 'Desagrado Demócrata',
-    'V241175': 'Desagrado Republicano',
-    'V241365': 'Cambio Climático',
-
-    # Nuevas variables descubiertas por el modelo
-    'V241178': 'Termómetro: D. Trump',
-    'V241609': 'Confianza en Medios/Noticias',
-    'V241045': 'Intención de Voto',
-    'V241554': 'Confianza Científica',
-    'V241325': 'Postura sobre el Aborto',
-    'V241107': 'Identidad Hispana/Latina',
-    'V241247': 'Importancia de la Religión'
+    'V241005': 'Interés en campañas', 'V241210': 'Importancia de quién gane',
+    'V241171': 'Desagrado Demócrata', 'V241175': 'Desagrado Republicano',
+    'V241365': 'Cambio Climático', 'V241178': 'Termómetro: D. Trump',
+    'V241609': 'Confianza en Medios', 'V241045': 'Intención de Voto',
+    'V241554': 'Confianza Científica', 'V241325': 'Postura sobre Aborto',
+    'V241107': 'Identidad Hispana', 'V241247': 'Religiosidad'
 }
 
 nombres_amigables = []
@@ -132,5 +128,7 @@ for col in columnas_modelo:
 fig, ax = plt.subplots(figsize=(10, 4))
 shap.bar_plot(valores_grafico, feature_names=nombres_amigables, max_display=10, show=False)
 st.pyplot(fig)
+
+st.info("💡 **Interpretación:** Las barras rojas (derecha) incrementan el riesgo; las azules (izquierda) lo mitigan.")
 
 st.info("💡 Interpretación: Las barras hacia la derecha (rojo) aumentan el riesgo de que este perfil haga boicot, hacia la izquierda (azul) lo disminuyen.")
