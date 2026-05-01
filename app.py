@@ -14,7 +14,7 @@ st.set_page_config(page_title="Brand Risk & Propensity Radar", page_icon="ðŸ›¡ï¸
 @st.cache_resource
 def cargar_recursos():
     # Cargamos el pipeline entrenado
-    path_modelo = 'modelo_boicot_rf.joblib'
+    path_modelo = 'models/modelo_boicot_rf.joblib'
     pipeline_rf = joblib.load(path_modelo)
     
     # Extraemos el modelo y preparamos el explicador SHAP
