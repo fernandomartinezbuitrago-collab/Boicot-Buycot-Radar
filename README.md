@@ -27,8 +27,7 @@ El núcleo del proyecto es un modelo de **Machine Learning (Random Forest)** opt
 Si deseas ejecutar este proyecto localmente, sigue estos pasos:
 
 1. **Clonar el repositorio:**
-   ```bash
-   git clone https://github.com/fernandomartinezbuitrago-collab/Boicot-Buycot-Radar.git
+   https://github.com/fernandomartinezbuitrago-collab/Boicot-Buycot-Radar.git
    cd Boicot-Buycot-Radar
    
    
